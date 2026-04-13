@@ -221,20 +221,22 @@ export default {
 					label: 'Payload',
 					id: 'payload',
 					default: '{}',
+					useVariables: true,
 				}
 			],
-			callback: async (action) => {
+			callback: async (action, ctx) => {
 				const opt = action.options
+				const payload = await ctx.parseVariablesInString(opt.payload)
 				this.log('debug', `Endpoint: ${opt.endpoint}`)
 				this.log('debug', `Method: ${opt.method}`)
-				this.log('debug', `Payload: ${opt.payload}`)
+				this.log('debug', `Payload: ${payload}`)
 
 				switch (opt.method) {
 					case 'GET':
 						this.sendGetRequest(opt.endpoint)
 						break
 					case 'PUT':
-						this.sendPutRequest(opt.endpoint, JSON.parse(opt.payload))
+						this.sendPutRequest(opt.endpoint, JSON.parse(payload))
 						break
 				}
 			},
